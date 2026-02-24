@@ -36,7 +36,7 @@ func (r *ROT) Encrypt(plain []byte) []byte {
 			cv := kl[(idx+r.conf.ko+tks)%len(kl)]
 
 			chiper = append(chiper, byte(cv))
-			tks *= 2
+			tks += tks % len(kl)
 			continue
 		}
 
@@ -44,7 +44,7 @@ func (r *ROT) Encrypt(plain []byte) []byte {
 			cv := vl[(idx+r.conf.vo+tvs)%len(vl)]
 
 			chiper = append(chiper, byte(cv))
-			tvs *= 2
+			tvs += tks % len(vl)
 			continue
 		}
 
