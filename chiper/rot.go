@@ -55,6 +55,29 @@ func (r *ROT) Encrypt(plain []byte) []byte {
 }
 
 func (r *ROT) Decrypt(chiper []byte) []byte {
+	plain := make([]byte, 0)
+	tks := r.conf.ks
+	tvs := r.conf.vs
 
-	return []byte("")
+	for _, v := range chiper {
+		if idx := strings.Index(string(kl), string(v)); idx > -1 {
+			cv := kl[(idx-(r.conf.ko+tks)%len(kl)+len(kl))%len(kl)]
+
+			plain = append(plain, byte(cv))
+			tks += tks % len(kl)
+			continue
+		}
+
+		if idx := strings.Index(string(vl), string(v)); idx > -1 {
+			cv := vl[(idx-(r.conf.vo+tvs)%len(vl)+len(vl))%len(vl)]
+
+			plain = append(plain, byte(cv))
+			tvs += tks % len(vl)
+			continue
+		}
+
+		plain = append(plain, v)
+	}
+
+	return plain
 }

@@ -22,5 +22,10 @@ func main() {
 
 	chip := chiper.NewROT(chiper.NewROTConf(ko, vo, ks, vs))
 
-	fmt.Println(string(chip.Encrypt([]byte(strings.ToUpper(plain)))))
+	chipertext := chip.Encrypt([]byte(strings.ToUpper(plain)))
+	plaintext := chip.Decrypt(chipertext)
+
+	fmt.Printf("plain : %s\n", plain)
+	fmt.Printf("chiper : %s\n", string(chipertext))
+	fmt.Printf("dechiper : %s\n", string(plaintext))
 }
