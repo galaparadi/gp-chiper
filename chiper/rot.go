@@ -7,22 +7,22 @@ import (
 const kl = "BCDFGHJKLMNPQRSTVWXYZ"
 const vl = "AEIOU"
 
-type ROTConf struct {
+type KVROTConf struct {
 	ko int
 	vo int
 	ks int
 	vs int
 }
 
-func NewROTConf(ko, vo, ks, vs int) ROTConf {
-	return ROTConf{ko, vo, ks, vs}
+func NewROTConf(ko, vo, ks, vs int) KVROTConf {
+	return KVROTConf{ko, vo, ks, vs}
 }
 
 type ROT struct {
-	conf ROTConf
+	conf KVROTConf
 }
 
-func NewROT(conf ROTConf) *ROT {
+func NewROT(conf KVROTConf) *ROT {
 	return &ROT{conf}
 }
 
@@ -32,7 +32,7 @@ func (r *ROT) Encrypt(plain []byte) []byte {
 	tvs := r.conf.vs
 
 	for _, v := range plain {
-		if idx := strings.Index(string(kl), string(v)); idx > -1 {
+		if idx := strings.IndexRune(string(kl), rune(v)); idx > -1 {
 			cv := kl[(idx+r.conf.ko+tks)%len(kl)]
 
 			chiper = append(chiper, byte(cv))
@@ -40,7 +40,7 @@ func (r *ROT) Encrypt(plain []byte) []byte {
 			continue
 		}
 
-		if idx := strings.Index(string(vl), string(v)); idx > -1 {
+		if idx := strings.IndexRune(string(vl), rune(v)); idx > -1 {
 			cv := vl[(idx+r.conf.vo+tvs)%len(vl)]
 
 			chiper = append(chiper, byte(cv))
@@ -60,7 +60,7 @@ func (r *ROT) Decrypt(chiper []byte) []byte {
 	tvs := r.conf.vs
 
 	for _, v := range chiper {
-		if idx := strings.Index(string(kl), string(v)); idx > -1 {
+		if idx := strings.IndexRune(string(kl), rune(v)); idx > -1 {
 			cv := kl[(idx-(r.conf.ko+tks)%len(kl)+len(kl))%len(kl)]
 
 			plain = append(plain, byte(cv))
@@ -68,7 +68,7 @@ func (r *ROT) Decrypt(chiper []byte) []byte {
 			continue
 		}
 
-		if idx := strings.Index(string(vl), string(v)); idx > -1 {
+		if idx := strings.IndexRune(string(vl), rune(v)); idx > -1 {
 			cv := vl[(idx-(r.conf.vo+tvs)%len(vl)+len(vl))%len(vl)]
 
 			plain = append(plain, byte(cv))
