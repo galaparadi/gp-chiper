@@ -18,15 +18,15 @@ func NewROTConf(ko, vo, ks, vs int) KVROTConf {
 	return KVROTConf{ko, vo, ks, vs}
 }
 
-type ROT struct {
+type KVROT struct {
 	conf KVROTConf
 }
 
-func NewROT(conf KVROTConf) *ROT {
-	return &ROT{conf}
+func NewROT(conf KVROTConf) *KVROT {
+	return &KVROT{conf}
 }
 
-func (r *ROT) Encrypt(plain []byte) []byte {
+func (r *KVROT) Encrypt(plain []byte) []byte {
 	chiper := make([]byte, 0)
 	tks := r.conf.ks
 	tvs := r.conf.vs
@@ -54,7 +54,7 @@ func (r *ROT) Encrypt(plain []byte) []byte {
 	return chiper
 }
 
-func (r *ROT) Decrypt(chiper []byte) []byte {
+func (r *KVROT) Decrypt(chiper []byte) []byte {
 	plain := make([]byte, 0)
 	tks := r.conf.ks
 	tvs := r.conf.vs
